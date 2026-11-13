@@ -486,7 +486,7 @@ export const professionalLiabilityQuote: FormDef = {
         { type: 'signature', name: 'signature', label: 'Signature of Officer or Partner of the Firm', required: true, sensitive: true },
         { type: 'text', name: 'signatoryFirstName', label: 'First Name of Signatory Officer or Partner', required: true, width: 'half', hubspot: 'firstname' },
         { type: 'text', name: 'signatoryLastName', label: 'Last Name of Signatory Officer or Partner', required: true, width: 'half', hubspot: 'lastname' },
-        { type: 'date', name: 'signatureDate', label: 'Date', required: true, width: 'half' },
+        { type: 'date', name: 'signatureDate', label: 'Date', required: true, defaultToday: true, width: 'half' },
       ],
     },
   ],

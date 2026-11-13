@@ -67,6 +67,12 @@ export default function FormRenderer({ form, phone, phoneHref }: Props) {
   const multi = form.steps.length > 1;
   const last = step === form.steps.length - 1;
 
+  const todayDefaults = () => {
+    const dated: Values = {};
+    for (const s of form.steps) for (const f of s.fields) if (f.type === 'date' && f.defaultToday) dated[f.name] = today;
+    return dated;
+  };
+
   const loadToken = () => {
     token.current = fetch('/api/forms/token/', { headers: { Accept: 'application/json' } })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('token'))))
@@ -81,13 +87,16 @@ export default function FormRenderer({ form, phone, phoneHref }: Props) {
   useEffect(() => {
     setHydrated(true);
     loadToken();
+    // Set after hydration: the page is prerendered, so "today" is only known in the browser.
+    const dated = todayDefaults();
+    if (Object.keys(dated).length) setValues((v) => ({ ...dated, ...v }));
     if (!form.draft) return;
     try {
       const saved = sessionStorage.getItem(draftKey(form.id));
       if (saved) {
         const parsed = JSON.parse(saved) as { values: Values; step: number };
         if (parsed && typeof parsed.values === 'object') {
-          setValues({ ...initialValues(form), ...parsed.values });
+          setValues({ ...initialValues(form), ...dated, ...parsed.values });
           setStep(Math.min(Math.max(0, parsed.step | 0), form.steps.length - 1));
           setRestored(true);
         }
@@ -219,7 +228,7 @@ export default function FormRenderer({ form, phone, phoneHref }: Props) {
       /* ignore */
     }
     files.current.clear();
-    setValues(initialValues(form));
+    setValues({ ...initialValues(form), ...todayDefaults() });
     setErrors({});
     setStep(0);
     setRestored(false);

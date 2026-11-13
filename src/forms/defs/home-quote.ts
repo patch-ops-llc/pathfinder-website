@@ -17,6 +17,8 @@ export const homeQuote: FormDef = {
   // contact through the Home and Auto "Let's Talk" form.
   hubspotFormGuid: '1ee9fcf7-712e-49d7-9010-29af6eb5f691',
   hubspotSummary: true,
+  // Dates of birth travel in the alert email only.
+  emailRequired: true,
   draft: true,
   submitLabel: 'Submit',
   success: {

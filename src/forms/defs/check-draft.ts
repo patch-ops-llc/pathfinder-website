@@ -52,7 +52,7 @@ export const checkDraft: FormDef = {
           { tone: 'plain' },
         ),
         { type: 'signature', name: 'signature', label: 'Signature', required: true, sensitive: true },
-        { type: 'date', name: 'date', label: 'Date', required: true, width: 'half' },
+        { type: 'date', name: 'date', label: 'Date', required: true, defaultToday: true, width: 'half' },
       ],
     },
   ],

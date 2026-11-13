@@ -81,6 +81,8 @@ export interface DateField extends BaseField {
   type: 'date';
   /** 'past' rejects future dates, 'future' rejects past dates. */
   range?: 'past' | 'future';
+  /** Prefill with the visitor's current date (signature dates). Top-level fields only. */
+  defaultToday?: boolean;
   autocomplete?: string;
 }
 
