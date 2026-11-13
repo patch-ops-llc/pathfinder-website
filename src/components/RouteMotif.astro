@@ -1,0 +1,97 @@
+---
+// Decorative "find your path" route line with waypoints. Purely visual.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg viewBox="0 0 1200 600" fill="none" preserveAspectRatio="xMidYMid slice" class:list={['pointer-events-none', className]} aria-hidden="true">
+  <defs>
+    <linearGradient id="route-g" x1="0" y1="600" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#45bdff" stop-opacity="0"></stop>
+      <stop offset="0.25" stop-color="#45bdff" stop-opacity="0.9"></stop>
+      <stop offset="1" stop-color="#86b8f5" stop-opacity="0.5"></stop>
+    </linearGradient>
+  </defs>
+  <path
+    class="route-line"
+    d="M-20 560 C 160 540, 220 430, 380 420 S 560 470, 660 340 S 820 180, 940 190 S 1120 110, 1230 30"
+    stroke="url(#route-g)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    pathLength="1"
+  ></path>
+  <g class="route-dots" fill="#45bdff">
+    <circle cx="380" cy="420" r="5"></circle>
+    <circle cx="660" cy="340" r="5"></circle>
+    <circle cx="940" cy="190" r="5"></circle>
+  </g>
+  <g fill="none" stroke="#45bdff" stroke-opacity="0.35">
+    <circle class="route-ring" cx="380" cy="420" r="12"></circle>
+    <circle class="route-ring" cx="660" cy="340" r="12" style="animation-delay:.9s"></circle>
+    <circle class="route-ring" cx="940" cy="190" r="12" style="animation-delay:1.8s"></circle>
+  </g>
+</svg>
+
+<style>
+  .route-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .route-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .route-line {
+      animation: draw 2.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+    }
+    .route-dots circle {
+      animation: pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .route-dots circle:nth-child(1) {
+      animation-delay: 0.9s;
+    }
+    .route-dots circle:nth-child(2) {
+      animation-delay: 1.3s;
+    }
+    .route-dots circle:nth-child(3) {
+      animation-delay: 1.7s;
+    }
+    .route-ring {
+      animation: ring 3.2s ease-out 2s infinite both;
+    }
+  }
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes ring {
+    0% {
+      opacity: 0.9;
+      transform: scale(0.6);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(2.6);
+    }
+  }
+</style>

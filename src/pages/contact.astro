@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import LeadSection from '../components/LeadSection.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../config/site.ts';
+import { webPageSchema, type Crumb } from '../lib/seo.ts';
+
+const base = Astro.site!;
+const path = '/contact/';
+const title = 'Contact Us';
+const description = `Contact Pathfinder/LL&D Insurance Group: call ${site.phone.display}, visit us at ${site.address.street} in Houston, Texas, or send us a message.`;
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path },
+];
+const phones = [{ display: site.phone.display, tel: site.phone.tel, label: 'Main' }, ...site.otherPhones.map((p) => ({ ...p, label: 'Also' }))];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description, type: 'ContactPage' })]}>
+  <PageHero eyebrow="Contact" title="Let’s talk" lead="Call us, visit us in Houston, or send a message and a member of our team will follow up." crumbs={crumbs} compact>
+    <a href={`tel:${site.phone.tel}`} class="btn btn-light"><Icon name="phone" size={16} /> {site.phone.display}</a>
+    <a href="#lets-talk" class="btn btn-ghost">Send a message <Icon name="arrow-right" size={16} class="arrow" /></a>
+  </PageHero>
+
+  <section class="py-16 sm:py-20" aria-labelledby="reach-heading">
+    <div class="container-page">
+      <h2 id="reach-heading" class="sr-only">Ways to reach us</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="card p-7" data-reveal>
+          <span class="bg-brand-50 text-brand-700 flex h-12 w-12 items-center justify-center rounded-xl"><Icon name="phone" size={22} /></span>
+          <h3 class="mt-5 text-xl">Call</h3>
+          <ul class="mt-3 space-y-1">
+            {
+              phones.map((p) => (
+                <li>
+                  <a href={`tel:${p.tel}`} class="text-brand-800 inline-flex min-h-11 items-center font-semibold tabular-nums underline-offset-4 hover:underline">
+                    {p.display}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="card p-7" data-reveal style="--reveal-i:1">
+          <span class="bg-brand-50 text-brand-700 flex h-12 w-12 items-center justify-center rounded-xl"><Icon name="map-pin" size={22} /></span>
+          <h3 class="mt-5 text-xl">Visit</h3>
+          <address class="mt-3 leading-7 not-italic">
+            {site.name}<br />
+            {site.address.street}<br />
+            {site.address.city}, {site.address.regionName} {site.address.postalCode}
+          </address>
+          <a href={site.mapUrl} target="_blank" rel="noopener" class="text-brand-700 mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline">
+            Get directions <Icon name="external" size={14} />
+          </a>
+        </div>
+        <div class="card p-7" data-reveal style="--reveal-i:2">
+          <span class="bg-brand-50 text-brand-700 flex h-12 w-12 items-center justify-center rounded-xl"><Icon name="credit-card" size={22} /></span>
+          <h3 class="mt-5 text-xl">Payments by mail</h3>
+          <address class="mt-3 leading-7 not-italic">
+            {site.paymentsMail.name}<br />
+            {site.paymentsMail.line1}<br />
+            {site.paymentsMail.line2}
+          </address>
+          <a href="/make-a-payment/" class="text-brand-700 mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline">
+            All payment options <Icon name="arrow-right" size={14} />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <LeadSection formId="lead-contact" heading="Send us a message" text="Tell us a little about you and what you need. A member of our team will follow up." />
+</BaseLayout>

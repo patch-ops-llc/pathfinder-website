@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import type { Crumb } from '../lib/seo.ts';
+
+// Staff help page carried over from the previous site. It is not linked from
+// the navigation and is excluded from search engines and the sitemap.
+const title = 'Remote Desktop Access';
+const description = 'How Pathfinder/LL&D staff log into the remote desktop environment from Windows.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: title, path: '/remote-desktop-access/' },
+];
+const store = 'https://www.microsoft.com/en-us/p/microsoft-remote-desktop/9wzdncrfj3ps?activetab=pivot:regionofsystemrequirementstab';
+---
+
+<BaseLayout title={title} description={description} noindex>
+  <PageHero eyebrow="For Pathfinder/LL&D staff" title="Remote Desktop Access" lead="How to log into the remote desktop environment from Windows 10:" crumbs={crumbs} compact />
+
+  <section class="py-12 sm:py-16 lg:py-20">
+    <div class="container-page">
+      <div class="prose-legal mx-auto max-w-3xl">
+        <ol class="steps">
+          <li>Click the Start button</li>
+          <li>Type in “Remote Desktop”</li>
+          <li>Click on “Remote Desktop Connection”</li>
+          <li>
+            If you cannot locate remote desktop, please click the following link and download it from the Microsoft Store
+            <ul>
+              <li><a href={store} rel="noopener">{store}</a></li>
+              <li>Once downloaded, close the black window that opens and repeat steps 1 through 3.</li>
+            </ul>
+          </li>
+          <li>Type in “rd.pathfinderlld.com” in the Connect To field</li>
+          <li>Click on “Show Options”</li>
+          <li>Select “Use all my monitors for the remote session”</li>
+          <li>Click “Connect”</li>
+          <li>Enter your Pathfinder domain credentials (if you are on your personal computer your username should be in the format of “pathfinderlld\username”)</li>
+        </ol>
+        <p>You should now be connected to the remote desktop.</p>
+        <p>For EPIC, you will likely be prompted for an “Enterprise” the first time you log in. Use pathf01</p>
+        <p>
+          For ShoreTel, you will be prompted for a server the first time you log in. Use Shoretel-Hou also, rather than putting in a user name and password on that same window, check the box that says to
+          use your windows credentials.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+  .steps > li {
+    counter-increment: step;
+    position: relative;
+    margin: 0.75rem 0;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    padding: 1rem 1.25rem 1rem 4rem;
+  }
+  .steps > li::before {
+    content: counter(step);
+    position: absolute;
+    top: 0.85rem;
+    left: 1rem;
+    display: flex;
+    height: 2.1rem;
+    width: 2.1rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #0051a0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+  }
+</style>

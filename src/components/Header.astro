@@ -1,0 +1,277 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo.png';
+import Icon from './Icon.astro';
+import { nav, navLinks, site } from '../config/site.ts';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href;
+const groupActive = (g: (typeof nav)[number]) => g.href === path || g.items.some((i) => i.href === path);
+---
+
+<header
+  data-site-header
+  class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl transition-shadow duration-300 supports-[backdrop-filter]:bg-white/75"
+>
+  <div class="container-page flex h-16 items-center justify-between gap-4 lg:h-[4.5rem]">
+    <a href="/" class="flex shrink-0 items-center" aria-label={`${site.name} home`}>
+      <Image
+        src={logo}
+        alt={site.name}
+        width={212}
+        height={48}
+        widths={[212, 424]}
+        sizes="212px"
+        loading="eager"
+        fetchpriority="low"
+        class="h-9 w-auto sm:h-10 lg:h-11"
+      />
+    </a>
+
+    <nav aria-label="Primary" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          nav.map((group, gi) => (
+            <li class="group/nav relative" data-nav-group>
+              <div class="flex items-center">
+                <a
+                  href={group.href}
+                  aria-current={isActive(group.href!) ? 'page' : undefined}
+                  class:list={[
+                    'hover:text-brand-700 rounded-full py-2 pr-1 pl-3.5 text-sm font-semibold transition-colors',
+                    groupActive(group) ? 'text-brand-700' : 'text-ink',
+                  ]}
+                >
+                  {group.label}
+                </a>
+                <button
+                  type="button"
+                  class="hover:text-brand-700 -ml-0.5 flex h-8 w-7 items-center justify-center rounded-full text-slate-500"
+                  aria-expanded="false"
+                  aria-controls={`nav-menu-${gi}`}
+                  aria-label={`Show ${group.label} menu`}
+                  data-nav-toggle
+                >
+                  <Icon name="chevron-down" size={16} class="transition-transform duration-300 group-hover/nav:rotate-180 group-data-[open]/nav:rotate-180" />
+                </button>
+              </div>
+              <div
+                id={`nav-menu-${gi}`}
+                class="invisible absolute top-full left-1/2 w-[23rem] -translate-x-1/2 translate-y-1 pt-3 opacity-0 transition duration-200 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-data-[open]/nav:visible group-data-[open]/nav:translate-y-0 group-data-[open]/nav:opacity-100"
+              >
+                <ul class="shadow-lift rounded-2xl border border-slate-200/80 bg-white p-2">
+                  {group.items.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        aria-current={isActive(item.href) ? 'page' : undefined}
+                        class:list={[
+                          'group flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 transition-colors',
+                          isActive(item.href) ? 'bg-brand-50' : 'hover:bg-mist',
+                        ]}
+                      >
+                        <span>
+                          <span class="text-ink block text-sm font-semibold">{item.label}</span>
+                          {item.description && <span class="mt-0.5 block text-xs text-slate-500">{item.description}</span>}
+                        </span>
+                        <Icon name="arrow-right" size={16} class="arrow text-brand-600 shrink-0 opacity-0 transition group-hover:opacity-100" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? 'page' : undefined}
+                class:list={[
+                  'hover:text-brand-700 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors',
+                  isActive(link.href) ? 'text-brand-700' : 'text-ink',
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={`tel:${site.phone.tel}`}
+        class="text-ink hover:text-brand-700 hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-colors xl:flex"
+      >
+        <Icon name="phone" size={16} class="text-brand-600" />
+        {site.phone.display}
+      </a>
+      <a href="/get-a-quote/" class="btn btn-primary hidden min-h-11 px-5 py-2.5 sm:inline-flex">
+        Get a quote
+        <Icon name="arrow-right" size={16} class="arrow" />
+      </a>
+      <a
+        href={`tel:${site.phone.tel}`}
+        class="text-brand-700 flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white sm:hidden"
+        aria-label={`Call ${site.phone.display}`}
+      >
+        <Icon name="phone" size={18} />
+      </a>
+      <button
+        type="button"
+        class="text-ink flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+        data-menu-open
+      >
+        <Icon name="menu" size={20} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog
+  id="mobile-menu"
+  aria-label="Site menu"
+  class="m-0 h-dvh max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-brand-950/60 backdrop:backdrop-blur-sm lg:hidden"
+>
+  <div class="mobile-sheet ml-auto flex h-full w-full max-w-sm flex-col bg-white shadow-2xl">
+    <div class="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 px-5">
+      <span class="text-ink text-sm font-bold tracking-[0.18em] uppercase">Menu</span>
+      <button
+        type="button"
+        class="text-ink flex h-11 w-11 items-center justify-center rounded-full border border-slate-200"
+        aria-label="Close menu"
+        data-menu-close
+      >
+        <Icon name="x" size={20} />
+      </button>
+    </div>
+    <nav aria-label="Mobile" class="flex-1 overflow-y-auto overscroll-contain px-5 py-4">
+      <ul class="space-y-1">
+        {
+          nav.map((group) => (
+            <li>
+              <details class="group/d border-b border-slate-100" open={groupActive(group)}>
+                <summary class="text-ink flex min-h-14 cursor-pointer list-none items-center justify-between text-lg font-bold">
+                  {group.label}
+                  <Icon name="chevron-down" size={20} class="text-slate-400 transition-transform duration-300 group-open/d:rotate-180" />
+                </summary>
+                <ul class="pb-3">
+                  <li>
+                    <a href={group.href} class="text-brand-700 flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold">
+                      {group.label} overview
+                    </a>
+                  </li>
+                  {group.items.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        aria-current={isActive(item.href) ? 'page' : undefined}
+                        class:list={[
+                          'flex min-h-11 items-center rounded-lg px-3 text-[0.95rem] font-medium',
+                          isActive(item.href) ? 'bg-brand-50 text-brand-800' : 'text-slate-700',
+                        ]}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ))
+        }
+        {
+          [...navLinks, { label: 'Contact', href: '/contact/' }].map((link) => (
+            <li class="border-b border-slate-100">
+              <a href={link.href} class="text-ink flex min-h-14 items-center text-lg font-bold">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="shrink-0 space-y-3 border-t border-slate-200 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+      <a href="/get-a-quote/" class="btn btn-primary w-full">
+        Get a quote
+        <Icon name="arrow-right" size={16} class="arrow" />
+      </a>
+      <a href={`tel:${site.phone.tel}`} class="btn btn-outline w-full">
+        <Icon name="phone" size={16} />
+        {site.phone.display}
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  dialog[open] .mobile-sheet {
+    animation: sheet-in 0.35s var(--ease-out-expo) both;
+  }
+  @keyframes sheet-in {
+    from {
+      transform: translate3d(100%, 0, 0);
+    }
+    to {
+      transform: none;
+    }
+  }
+  [data-site-header][data-scrolled] {
+    box-shadow: 0 10px 30px -18px rgb(6 26 51 / 0.35);
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const header = document.querySelector('[data-site-header]');
+    const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 8);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+
+    const groups = document.querySelectorAll('[data-nav-group]');
+    const closeAll = (except) =>
+      groups.forEach((g) => {
+        if (g === except) return;
+        g.removeAttribute('data-open');
+        g.querySelector('[data-nav-toggle]').setAttribute('aria-expanded', 'false');
+      });
+    groups.forEach((g) => {
+      const btn = g.querySelector('[data-nav-toggle]');
+      btn.addEventListener('click', () => {
+        const open = g.toggleAttribute('data-open');
+        btn.setAttribute('aria-expanded', String(open));
+        closeAll(g);
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('[data-nav-group]')) closeAll();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      closeAll();
+      if (document.activeElement && document.activeElement.closest('[data-nav-group]')) document.activeElement.blur();
+    });
+
+    const dialog = document.getElementById('mobile-menu');
+    const openBtn = document.querySelector('[data-menu-open]');
+    openBtn.addEventListener('click', () => {
+      dialog.showModal();
+      openBtn.setAttribute('aria-expanded', 'true');
+    });
+    dialog.addEventListener('close', () => openBtn.setAttribute('aria-expanded', 'false'));
+    dialog.querySelector('[data-menu-close]').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+      if (e.matches && dialog.open) dialog.close();
+    });
+  })();
+</script>

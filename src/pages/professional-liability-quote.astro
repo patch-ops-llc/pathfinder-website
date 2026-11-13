@@ -1,0 +1,27 @@
+---
+import FormPage from '../components/FormPage.astro';
+import { img } from '../content/images.ts';
+---
+
+<FormPage
+  path="/professional-liability-quote/"
+  formId="professional-liability-quote"
+  title="Lawyers’ Professional Liability Quote"
+  description="Apply online for a lawyers’ professional liability insurance quote from Pathfinder/LL&D: firm details, attorneys, practice areas, insurance history and claims."
+  eyebrow="Professional Services"
+  heading="Professional Liability Quote"
+  lead="The Lawyers’ Professional Liability application for law firms. Your progress is saved in this browser as you go, so you can step away and come back."
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Professional Services Insurance', path: '/professional-services-insurance/' },
+    { name: 'Professional Liability Quote', path: '/professional-liability-quote/' },
+  ]}
+  image={img('lines/professional-liability')}
+  imageAlt="Judge’s gavel on a desk in front of a shelf of law books"
+  checklist={[
+    'Firm details and a list of attorneys with bar admission dates',
+    'Percentage of practice by area of law (must total 100%)',
+    'Five years of insurance history and gross revenue',
+    'Details of any claims or disciplinary matters',
+  ]}
+/>

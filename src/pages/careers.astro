@@ -1,0 +1,23 @@
+---
+import FormPage from '../components/FormPage.astro';
+import { img } from '../content/images.ts';
+---
+
+<FormPage
+  path="/careers/"
+  formId="careers"
+  title="Careers"
+  description="Apply to join Pathfinder/LL&D Insurance Group in Houston, Texas. Complete the application for employment online and attach your resume."
+  eyebrow="Resources"
+  heading="Careers"
+  lead="Join a team of seasoned brokers and service representatives who have been guiding clients since 1913. Complete the application for employment below."
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Resources', path: '/resources/' },
+    { name: 'Careers', path: '/careers/' },
+  ]}
+  image={img('lines/compass')}
+  imageAlt="Hand holding a compass at sunset"
+  checklist={['Your education and employment history', 'Contact details for your references', 'Your resume (optional): PDF, Word or image, up to 10 MB']}
+  privacy="Your application is sent to the Pathfinder/LL&D team over an encrypted connection and is used only to consider you for employment."
+/>

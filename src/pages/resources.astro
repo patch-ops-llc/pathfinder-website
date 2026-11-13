@@ -1,0 +1,76 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import { img } from '../content/images.ts';
+import { webPageSchema, type Crumb } from '../lib/seo.ts';
+
+const base = Astro.site!;
+const path = '/resources/';
+const title = 'Resources';
+const description =
+  'Pathfinder/LL&D resources: start a home, auto or professional liability quote, make a payment, or apply to join our team.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: title, path },
+];
+const tiles = [
+  { title: 'Home Quote', text: 'Start a homeowners quote online.', href: '/home-insurance-quote/', image: 'lines/home-and-auto', alt: 'Two-storey stone and shingle home', icon: 'home' },
+  { title: 'Auto Quote', text: 'Start an auto quote online.', href: '/auto-quote/', image: 'lines/auto', alt: 'Classic red convertible sports car', icon: 'car' },
+  {
+    title: 'Professional Liability Quote',
+    text: 'The Lawyers’ Professional Liability application.',
+    href: '/professional-liability-quote/',
+    image: 'lines/professional-liability',
+    alt: 'Judge’s gavel in front of law books',
+    icon: 'scale',
+  },
+  { title: 'Make a Payment', text: 'Pay online, by check draft, by phone or by mail.', href: '/make-a-payment/', image: 'lines/make-a-payment', alt: 'Payment card held over a laptop', icon: 'credit-card' },
+  { title: 'Careers', text: 'Apply to join the Pathfinder/LL&D team.', href: '/careers/', image: 'lines/compass', alt: 'Hand holding a compass at sunset', icon: 'users' },
+  { title: 'Our Team', text: 'Meet the brokers and service representatives.', href: '/our-team/', image: 'lines/people', alt: 'Advisor talking with a couple', icon: 'handshake' },
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description, type: 'CollectionPage' })]}>
+  <PageHero eyebrow="Resources" title="Resources" lead="Quotes, payments and careers, all in one place." crumbs={crumbs} image={img('lines/resources')} imageAlt="Hands typing on a laptop keyboard" />
+
+  <section class="relative py-16 sm:py-20 lg:py-28" aria-labelledby="resources-heading">
+    <div class="bg-dots absolute inset-x-0 top-0 -z-10 h-72" aria-hidden="true"></div>
+    <div class="container-page">
+      <h2 id="resources-heading" class="sr-only">All resources</h2>
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          tiles.map((t, i) => (
+            <li class="group relative isolate flex min-h-72 flex-col justify-end overflow-hidden rounded-[1.5rem] shadow-card transition duration-500 hover:-translate-y-1 hover:shadow-lift" data-reveal style={`--reveal-i:${i % 3}`}>
+              <Picture
+                src={img(t.image)}
+                alt={t.alt}
+                formats={['avif', 'webp']}
+                widths={[360, 540, 800]}
+                sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                quality={55}
+                loading="lazy"
+                class="absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105"
+              />
+              <div class="from-brand-950 via-brand-950/60 absolute inset-0 -z-10 bg-gradient-to-t to-transparent" aria-hidden="true" />
+              <div class="p-6">
+                <span class="text-brand-700 flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-lg"><Icon name={t.icon} size={20} /></span>
+                <h3 class="mt-4 text-xl text-white">
+                  <a href={t.href} class="after:absolute after:inset-0">{t.title}</a>
+                </h3>
+                <p class="mt-1 flex items-center justify-between gap-3 text-sm text-slate-200">
+                  {t.text}
+                  <Icon name="arrow-right" size={16} class="arrow shrink-0 text-white" />
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

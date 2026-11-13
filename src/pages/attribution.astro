@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { webPageSchema, type Crumb } from '../lib/seo.ts';
+
+const base = Astro.site!;
+const path = '/attribution/';
+const title = 'Attribution';
+const description = 'Credits for the photography, typography and software used on the Pathfinder/LL&D Insurance Group website.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: title, path },
+];
+const cc0 = 'https://creativecommons.org/publicdomain/zero/1.0/';
+const photos = [
+  { author: 'Ales Krivec', profile: 'https://unsplash.com/@aleskrivec', photo: 'https://unsplash.com/photos/ipkBKVWSoBY' },
+  { author: 'William Iven', profile: 'https://unsplash.com/@firmbee', photo: 'https://unsplash.com/photos/OP2EQ5g-Zkw' },
+  { author: 'averie woodard', profile: 'https://unsplash.com/@averieclaire', photo: 'https://unsplash.com/photos/674UnCLRWr4' },
+  { author: 'Štefan Štefančík', profile: 'https://unsplash.com/@cikstefan', photo: 'https://unsplash.com/photos/TPv9dh822VA' },
+  { author: 'Simon Stratford', profile: 'https://unsplash.com/@itsmesimon', photo: 'https://unsplash.com/photos/PqAKaItu2jc' },
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description })]}>
+  <PageHero title="Attribution" lead="This site has been created with the help of many different people and companies." crumbs={crumbs} compact />
+
+  <section class="py-12 sm:py-16 lg:py-20">
+    <div class="container-page">
+      <div class="prose-legal mx-auto max-w-3xl">
+        <p>In particular, a special thanks goes to the following for content running on this site:</p>
+
+        <h2>Photography</h2>
+        <ul>
+          {
+            photos.map((p) => (
+              <li>
+                <a href={p.photo} rel="noopener">Photograph</a> by <a href={p.profile} rel="noopener">{p.author}</a> / <a href="https://unsplash.com/" rel="noopener">Unsplash</a>. License:{' '}
+                <a href={cc0} rel="noopener">CC0 1.0 Public Domain Dedication</a>.
+              </li>
+            ))
+          }
+          <li>Other stock photographs carried over from our previous website, where the author and license were not recorded.</li>
+          <li>Team portraits: Pathfinder/LL&amp;D Insurance Group.</li>
+        </ul>
+
+        <h2>Typography</h2>
+        <p>
+          <a href="https://github.com/JulietaUla/Montserrat" rel="noopener">Montserrat</a> by Julieta Ulanovsky and the Montserrat Project Authors, licensed under the{' '}
+          <a href="https://openfontlicense.org/" rel="noopener">SIL Open Font License 1.1</a>.
+        </p>
+
+        <h2>Software</h2>
+        <p>
+          This site is built with <a href="https://astro.build/" rel="noopener">Astro</a>, <a href="https://preactjs.com/" rel="noopener">Preact</a> and{' '}
+          <a href="https://tailwindcss.com/" rel="noopener">Tailwind CSS</a>, all open-source software released under the MIT License.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

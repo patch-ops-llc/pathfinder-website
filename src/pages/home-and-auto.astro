@@ -1,0 +1,21 @@
+---
+import HubPage from '../components/HubPage.astro';
+import { img } from '../content/images.ts';
+import { personalLines } from '../content/lines.ts';
+---
+
+<HubPage
+  path="/home-and-auto/"
+  name="Home and Auto"
+  title="Home and Auto Insurance for Individuals and Families"
+  description="We guide people. High-value home and auto insurance and coverage for collections such as art, wine, coins, furniture, memorabilia and statues, from Pathfinder/LL&D."
+  heading="We guide people."
+  lead="High-value home and auto insurance, and expanded coverage for the collections you care about. Start a quote online or choose a path below."
+  lines={personalLines}
+  image={img('lines/home-and-auto')}
+  imageAlt="Two-storey stone and shingle home with a landscaped front garden"
+  links={[
+    { label: 'Home Quote', href: '/home-insurance-quote/' },
+    { label: 'Auto Quote', href: '/auto-quote/' },
+  ]}
+/>

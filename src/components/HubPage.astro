@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import LineCard from '../components/LineCard.astro';
+import PageHero from '../components/PageHero.astro';
+import type { ImageMetadata } from 'astro';
+import type { Line } from '../content/lines.ts';
+import { orgId, webPageSchema, type Crumb } from '../lib/seo.ts';
+
+interface Props {
+  path: string;
+  name: string;
+  title: string;
+  description: string;
+  heading: string;
+  lead: string;
+  lines: Line[];
+  image: ImageMetadata;
+  imageAlt: string;
+  links?: { label: string; href: string }[];
+}
+const { path, name, title, description, heading, lead, lines, image, imageAlt, links = [] } = Astro.props;
+const base = Astro.site!;
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name, path },
+];
+const jsonLd = [
+  webPageSchema(base, { path, title, description, type: 'CollectionPage' }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: heading,
+    itemListElement: lines.map((l, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: { '@type': 'Service', name: l.heading, url: new URL(l.path, base).toString(), provider: { '@id': orgId(base) } },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={jsonLd}>
+  <PageHero eyebrow={name} title={heading} lead={lead} crumbs={crumbs} image={image} imageAlt={imageAlt}>
+    {links.map((l, i) => <a href={l.href} class:list={['btn', i === 0 ? 'btn-light' : 'btn-ghost']}>{l.label} <Icon name="arrow-right" size={16} class="arrow" /></a>)}
+  </PageHero>
+
+  <section class="relative py-16 sm:py-20 lg:py-28" aria-labelledby="lines-heading">
+    <div class="bg-dots absolute inset-x-0 top-0 -z-10 h-72" aria-hidden="true"></div>
+    <div class="container-page">
+      <div class="max-w-2xl" data-reveal>
+        <p class="eyebrow">Choose a path</p>
+        <h2 id="lines-heading" class="mt-4 text-3xl sm:text-4xl lg:text-[2.75rem]">{name === 'Businesses' ? 'Coverage for businesses' : 'Coverage for people'}</h2>
+      </div>
+      <div class:list={['mt-12 grid gap-6 sm:grid-cols-2', lines.length > 2 ? 'lg:grid-cols-3' : 'lg:max-w-4xl']}>
+        {lines.map((line, i) => <LineCard line={line} index={i} headingLevel="h3" />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

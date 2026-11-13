@@ -1,0 +1,26 @@
+---
+import FormPage from '../components/FormPage.astro';
+import { img } from '../content/images.ts';
+---
+
+<FormPage
+  path="/auto-quote/"
+  formId="auto-quote"
+  title="Auto Insurance Quote"
+  description="Start an auto insurance quote online with Pathfinder/LL&D. Add your drivers, vehicles and the coverage you want, and our team will get in touch."
+  eyebrow="Home and Auto"
+  heading="Auto Quote"
+  lead="Add your drivers, your vehicles and the coverage you want. Once you’ve verified your information and submitted the form, we’ll get in touch as soon as possible."
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Home and Auto', path: '/home-and-auto/' },
+    { name: 'Auto Quote', path: '/auto-quote/' },
+  ]}
+  image={img('lines/auto-road')}
+  imageAlt="Silver convertible on an open road with mountains behind"
+  checklist={[
+    'Driver’s license number and state for each driver',
+    'Year, make, model and VIN for each vehicle',
+    'Your current policy, if you have one (provider and expiration date)',
+  ]}
+/>
