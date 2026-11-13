@@ -55,7 +55,7 @@ function lead({ id, name, envKey, guid, companyLabel = 'Company name', business 
     steps: [{ id: 'contact', title: "Let's Talk", fields }],
     submitLabel: 'Submit',
     success: { title: 'Thanks for submitting the form.', message: 'A member of our team will be in touch with you shortly.' },
-    contact: { email: 'email', firstName: 'firstname', lastName: 'lastname', phone: 'phone', company: 'company' },
+    contact: { email: 'email', firstName: 'firstname', lastName: 'lastname', phone: 'phone', ...(business ? { company: 'company' } : {}) },
   };
 }
 

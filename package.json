@@ -12,7 +12,7 @@
     "start": "node server.mjs",
     "preview": "node server.mjs",
     "check": "astro check",
-    "test": "node --test tests/"
+    "test": "node --test \"tests/*.test.ts\""
   },
   "dependencies": {
     "@astrojs/node": "^11.1.12",

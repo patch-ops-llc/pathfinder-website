@@ -26,5 +26,8 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     build: { assetsInlineLimit: 0 },
+    // Bundle every server dependency so the production image needs only
+    // dist/ and server.mjs, with no node_modules. sharp is used at build time only.
+    ssr: { noExternal: true, external: ['sharp'] },
   },
 });
