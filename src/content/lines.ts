@@ -210,7 +210,7 @@ export const lines: Line[] = [
     heading: 'Contractors Insurance',
     title: 'Contractors Insurance and Risk Management',
     metaDescription:
-      'Contractors insurance backed by over a century of combined experience: contract and indemnification review, workers’ compensation modifier analysis, safety programs and fast certificates.',
+      'Contractors insurance backed by over a century of combined experience: contract review, workers’ compensation analysis, safety programs and fast certificates.',
     blurb: 'Our team has over a century of combined experience serving contractors.',
     intro:
       'Our team has over a century of combined experience serving contractors. We have an intimate knowledge of the risks contractors have faced in the past, and we diligently observe and assess industry developments to anticipate risks in the future.',
@@ -310,7 +310,7 @@ export const lines: Line[] = [
     heading: 'Employee Benefits',
     title: 'Employee Benefits and Group Health Insurance',
     metaDescription:
-      'Group health and ancillary benefits, compliance, benefits technology and HR support: fully insured, alternative-funded or captive solutions designed around your workforce.',
+      'Group health and ancillary benefits, compliance, benefits technology and HR support: fully insured, alternative-funded or captive solutions.',
     blurb:
       'Our team specializes in helping organizations design and implement the right group health insurance solution.',
     intro:

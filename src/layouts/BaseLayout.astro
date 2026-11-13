@@ -36,7 +36,8 @@ const {
 
 const base = Astro.site ?? new URL('https://www.pathfinderlld.com');
 const canonical = new URL(Astro.url.pathname, base).toString();
-const fullTitle = rawTitle ? title : `${title} | ${site.name}`;
+// Keep titles within what search results show: long page titles get the short brand.
+const fullTitle = rawTitle ? title : `${title} | ${title.length > 34 ? site.shortName : site.name}`;
 const ogImageUrl = new URL(ogImage, base).toString();
 
 const schemas: JsonLd[] = [organizationSchema(base), websiteSchema(base)];
@@ -121,7 +122,9 @@ schemas.push(...jsonLd);
               }
             }
           },
-          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+          // The huge top margin counts everything above the viewport as visible, so
+          // content skipped by a jump link or a fast scroll is never left hidden.
+          { rootMargin: '100000px 0px -8% 0px', threshold: 0.08 },
         );
         els.forEach((el) => io.observe(el));
       })();

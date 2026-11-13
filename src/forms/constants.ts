@@ -83,3 +83,6 @@ export const US_STATES: [code: string, name: string][] = [
   ['WI', 'Wisconsin'],
   ['WY', 'Wyoming'],
 ];
+
+/** A form token younger than this is refused: no person completes a form that fast. */
+export const TOKEN_MIN_AGE_MS = 3_000;

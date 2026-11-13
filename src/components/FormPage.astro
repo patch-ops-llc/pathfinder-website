@@ -48,7 +48,7 @@ const steps = form.steps.length;
 ---
 
 <BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description }), ...jsonLd]}>
-  <PageHero eyebrow={eyebrow} title={heading} lead={lead} crumbs={crumbs} image={image} imageAlt={imageAlt} compact={!image}>
+  <PageHero eyebrow={eyebrow} title={heading} lead={lead} crumbs={crumbs} image={image} imageAlt={imageAlt} compact={!image} imageDesktopOnly>
     <slot name="actions" />
   </PageHero>
 

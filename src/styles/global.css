@@ -106,8 +106,13 @@
   }
   body {
     @apply bg-white font-sans text-slate-600 antialiased;
+
     font-feature-settings: 'ss01', 'cv11';
     text-rendering: optimizeLegibility;
+  }
+  /* Reveal animations start slightly off to the side; never let that widen the page. */
+  main {
+    overflow-x: clip;
   }
   h1,
   h2,

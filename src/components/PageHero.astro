@@ -14,8 +14,10 @@ interface Props {
   imageAlt?: string;
   /** Narrow heroes centre their text and omit the image. */
   compact?: boolean;
+  /** Hide the image on small screens, where it would push the page's main task down. */
+  imageDesktopOnly?: boolean;
 }
-const { eyebrow, title, lead, crumbs, image, imageAlt = '', compact = false } = Astro.props;
+const { eyebrow, title, lead, crumbs, image, imageAlt = '', compact = false, imageDesktopOnly = false } = Astro.props;
 ---
 
 <section class="surface-dark">
@@ -40,7 +42,7 @@ const { eyebrow, title, lead, crumbs, image, imageAlt = '', compact = false } = 
       </div>
       {
         image && !compact && (
-          <div class="relative" data-reveal="scale">
+          <div class:list={['relative', imageDesktopOnly && 'hidden lg:block']} data-reveal="scale">
             <div class="from-glow/40 to-brand-600/0 absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br blur-2xl" aria-hidden="true" />
             <Picture
               src={image}
@@ -48,8 +50,8 @@ const { eyebrow, title, lead, crumbs, image, imageAlt = '', compact = false } = 
               formats={['avif', 'webp']}
               widths={[400, 640, 800, 1100]}
               sizes="(min-width: 1024px) 560px, 100vw"
-              loading="eager"
-              fetchpriority="high"
+              loading={imageDesktopOnly ? 'lazy' : 'eager'}
+              fetchpriority={imageDesktopOnly ? 'auto' : 'high'}
               quality={62}
               class="aspect-[4/3] w-full rounded-[1.5rem] border border-white/15 object-cover shadow-2xl"
             />

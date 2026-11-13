@@ -109,7 +109,7 @@ export function config(): Config {
       tokenSecret: env.FORM_TOKEN_SECRET ?? '',
       turnstileSiteKey: env.TURNSTILE_SITE_KEY ?? '',
       turnstileSecretKey: env.TURNSTILE_SECRET_KEY ?? '',
-      rateLimitMax: int(env.RATE_LIMIT_MAX, 8),
+      rateLimitMax: int(env.RATE_LIMIT_MAX, 10),
       rateLimitWindowMs: int(env.RATE_LIMIT_WINDOW_SECONDS, 600) * 1000,
       trustProxy: bool(env.TRUST_PROXY, true),
     },

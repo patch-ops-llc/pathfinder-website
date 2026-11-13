@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { HONEYPOT_FIELD } from '../../forms/constants.ts';
+import { HONEYPOT_FIELD, TOKEN_MIN_AGE_MS } from '../../forms/constants.ts';
 import { getPath, prune, setPath, validate, visitInputs } from '../../forms/logic.ts';
 import type { Errors, FileRef, FormDef, RepeaterField, Value, Values } from '../../forms/types.ts';
 import { FieldList, domId, type FieldContext } from './fields.tsx';
@@ -54,6 +54,7 @@ export default function FormRenderer({ form, phone, phoneHref }: Props) {
   const files = useRef(new Map<string, File[]>());
   const token = useRef<Promise<string> | null>(null);
   const turnstileToken = useRef('');
+  const tokenAt = useRef(0);
   const turnstileEl = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const focusError = useRef(false);
@@ -71,6 +72,7 @@ export default function FormRenderer({ form, phone, phoneHref }: Props) {
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('token'))))
       .then((data: { token: string; turnstileSiteKey?: string }) => {
         if (data.turnstileSiteKey) setTurnstileKey(data.turnstileSiteKey);
+        tokenAt.current = Date.now();
         return data.token;
       })
       .catch(() => '');
@@ -234,25 +236,40 @@ export default function FormRenderer({ form, phone, phoneHref }: Props) {
     setStatus('submitting');
     setMessage('');
     try {
-      if (!token.current) loadToken();
-      const body = new FormData();
-      body.append(
-        'payload',
-        JSON.stringify({
-          values: effective,
-          token: await token.current,
-          [HONEYPOT_FIELD]: honeypot,
-          turnstileToken: turnstileToken.current,
-          page: location.href,
-        }),
-      );
-      visitInputs(form, effective, (f, _v, path) => {
-        if (f.type !== 'file') return;
-        for (const file of files.current.get(path) ?? []) body.append(`file:${path}`, file, file.name);
-      });
+      let res: Response | undefined;
+      let data: { ok?: boolean; errors?: Errors; message?: string } = {};
+      // A second attempt covers a token that expired while the page sat open:
+      // a fresh one is fetched and the form is sent again without bothering the person.
+      for (let attempt = 0; attempt < 2; attempt++) {
+        if (!token.current) loadToken();
+        const formToken = await token.current;
+        // The server refuses tokens younger than a few seconds (a bot check), so
+        // a very quick submission waits here instead of failing.
+        const wait = TOKEN_MIN_AGE_MS + 300 - (Date.now() - tokenAt.current);
+        if (formToken && wait > 0) await new Promise((r) => setTimeout(r, wait));
 
-      const res = await fetch(`/api/forms/${form.id}/`, { method: 'POST', body, headers: { Accept: 'application/json' } });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: Errors; message?: string };
+        const body = new FormData();
+        body.append(
+          'payload',
+          JSON.stringify({
+            values: effective,
+            token: formToken,
+            [HONEYPOT_FIELD]: honeypot,
+            turnstileToken: turnstileToken.current,
+            page: location.href,
+          }),
+        );
+        visitInputs(form, effective, (f, _v, path) => {
+          if (f.type !== 'file') return;
+          for (const file of files.current.get(path) ?? []) body.append(`file:${path}`, file, file.name);
+        });
+
+        res = await fetch(`/api/forms/${form.id}/`, { method: 'POST', body, headers: { Accept: 'application/json' } });
+        data = (await res.json().catch(() => ({}))) as typeof data;
+        if (res.status !== 403 || turnstileKey) break;
+        loadToken();
+      }
+      if (!res) throw new Error('no response');
 
       if (res.ok && data.ok) {
         try {

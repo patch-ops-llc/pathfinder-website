@@ -110,7 +110,7 @@ function post(formId: string, values: unknown, opts: PostOptions = {}) {
     }),
   );
   for (const [path, list] of Object.entries(opts.files ?? {})) {
-    for (const f of list) data.append(`file:${path}`, new File([f.bytes], f.name));
+    for (const f of list) data.append(`file:${path}`, new File([f.bytes as BlobPart], f.name));
   }
   // Serialise once so the request carries a real multipart body and length.
   const probe = new Request('http://internal/', { method: 'POST', body: data });

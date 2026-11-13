@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import { TOKEN_MIN_AGE_MS } from '../forms/constants.ts';
 import { config } from './env.ts';
 
 // ---------------------------------------------------------------------------
@@ -6,7 +7,7 @@ import { config } from './env.ts';
 // with the submission. It proves the sender ran our JavaScript and spent a
 // human amount of time on the page. It is a speed bump for bots, not a login.
 
-export const TOKEN_MIN_AGE_MS = 3_000;
+export { TOKEN_MIN_AGE_MS };
 export const TOKEN_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 let processSecret: string | undefined;
