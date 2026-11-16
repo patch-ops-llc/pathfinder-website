@@ -1,0 +1,49 @@
+---
+import FormCard from './FormCard.astro';
+import Icon from './Icon.astro';
+import { site } from '../config/site.ts';
+
+interface Props {
+  formId: string;
+  heading: string;
+  eyebrow?: string;
+  text?: string;
+  id?: string;
+}
+const { formId, heading, eyebrow = "Let's Talk", text = 'Tell us a little about you and a member of our team will follow up.', id = 'lets-talk' } = Astro.props;
+---
+
+<section id={id} class="surface-dark scroll-mt-20 py-16 sm:py-20 lg:py-28" aria-labelledby={`${id}-heading`}>
+  <div class="bg-grid absolute inset-0 -z-10" aria-hidden="true"></div>
+  <div class="glow-orb -right-40 -bottom-56 -z-10 h-[34rem] w-[34rem] opacity-60" aria-hidden="true"></div>
+  <div class="container-page grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+    <div data-reveal>
+      <p class="eyebrow eyebrow-light">{eyebrow}</p>
+      <h2 id={`${id}-heading`} class="mt-4 text-3xl leading-tight sm:text-4xl lg:text-[2.75rem]">{heading}</h2>
+      <p class="mt-5 max-w-md text-slate-300">{text}</p>
+      <ul class="mt-8 space-y-4 text-sm">
+        <li>
+          <a href={`tel:${site.phone.tel}`} class="group flex items-center gap-4 text-white">
+            <span class="text-glow flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5"><Icon name="phone" size={18} /></span>
+            <span>
+              <span class="block text-xs tracking-wider text-slate-400 uppercase">Call us</span>
+              <span class="text-base font-semibold group-hover:underline">{site.phone.display}</span>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href={site.mapUrl} target="_blank" rel="noopener" class="group flex items-center gap-4 text-white">
+            <span class="text-glow flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5"><Icon name="map-pin" size={18} /></span>
+            <span>
+              <span class="block text-xs tracking-wider text-slate-400 uppercase">Visit us</span>
+              <span class="text-base font-semibold group-hover:underline">{site.address.street}, {site.address.city}, {site.address.region} {site.address.postalCode}</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div data-reveal="scale">
+      <FormCard formId={formId} class="text-slate-600 shadow-2xl" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,98 @@
+---
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormCard from './FormCard.astro';
+import Icon from './Icon.astro';
+import PageHero from './PageHero.astro';
+import { site } from '../config/site.ts';
+import { requireForm } from '../forms/registry.ts';
+import { webPageSchema, type Crumb, type JsonLd } from '../lib/seo.ts';
+
+interface Props {
+  path: string;
+  formId: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  heading: string;
+  lead: string;
+  crumbs: Crumb[];
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Things the visitor should have to hand. */
+  checklist?: string[];
+  checklistHeading?: string;
+  /** Short reassurance shown under the checklist. */
+  privacy?: string;
+  jsonLd?: JsonLd[];
+}
+const {
+  path,
+  formId,
+  title,
+  description,
+  eyebrow,
+  heading,
+  lead,
+  crumbs,
+  image,
+  imageAlt,
+  checklist = [],
+  checklistHeading = 'Have these ready',
+  privacy = 'Your answers are sent to the Pathfinder/LL&D team over an encrypted connection. We use them only to respond to your request.',
+  jsonLd = [],
+} = Astro.props;
+const form = requireForm(formId);
+const base = Astro.site!;
+const steps = form.steps.length;
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description }), ...jsonLd]}>
+  <PageHero eyebrow={eyebrow} title={heading} lead={lead} crumbs={crumbs} image={image} imageAlt={imageAlt} compact={!image} imageDesktopOnly>
+    <slot name="actions" />
+  </PageHero>
+
+  <section class="bg-mist relative py-10 sm:py-14 lg:py-20" aria-label={form.name}>
+    <div class="container-page grid gap-8 lg:grid-cols-[19rem_minmax(0,1fr)] lg:gap-12">
+      <aside class="lg:sticky lg:top-28 lg:self-start">
+        <div class="card p-6">
+          <p class="eyebrow">{steps > 1 ? `${steps} short steps` : 'One short form'}</p>
+          {
+            checklist.length > 0 && (
+              <>
+                <h2 class="mt-4 text-lg">{checklistHeading}</h2>
+                <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
+                  {checklist.map((item) => (
+                    <li class="flex items-start gap-3">
+                      <span class="bg-brand-50 text-brand-700 mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full">
+                        <Icon name="check" size={12} />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+          <p class="mt-5 flex items-start gap-3 border-t border-slate-200 pt-5 text-xs leading-5 text-slate-500">
+            <Icon name="lock" size={16} class="text-brand-700 mt-0.5 shrink-0" />
+            {privacy}
+          </p>
+        </div>
+        <a href={`tel:${site.phone.tel}`} class="group card hover:border-brand-300 mt-4 flex items-center gap-4 p-5 transition duration-300">
+          <span class="bg-brand-700 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"><Icon name="phone" size={18} /></span>
+          <span>
+            <span class="block text-xs font-medium tracking-wider text-slate-500 uppercase">Prefer to talk?</span>
+            <span class="text-ink text-base font-bold group-hover:underline">{site.phone.display}</span>
+          </span>
+        </a>
+        <slot name="aside" />
+      </aside>
+      <div id="form" class="scroll-mt-28">
+        <FormCard formId={formId} eager />
+      </div>
+    </div>
+  </section>
+
+  <slot />
+</BaseLayout>

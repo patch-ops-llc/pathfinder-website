@@ -1,0 +1,18 @@
+---
+import HubPage from '../components/HubPage.astro';
+import { img } from '../content/images.ts';
+import { businessLines } from '../content/lines.ts';
+---
+
+<HubPage
+  path="/businesses/"
+  name="Businesses"
+  title="Business Insurance"
+  description="We guide businesses. Field-tested insurance for energy, professional services, real estate, contractors and non-profits, plus employee benefits."
+  heading="We guide businesses."
+  lead="Energy, professional services, real estate, contractors, non-profits and employee benefits. Choose your industry to see how our specialists can help."
+  lines={businessLines}
+  image={img('lines/businesses')}
+  imageAlt="Glass office towers at dusk"
+  links={[{ label: 'Talk to our team', href: '/contact/' }]}
+/>

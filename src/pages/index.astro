@@ -1,0 +1,271 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import LineCard from '../components/LineCard.astro';
+import RouteMotif from '../components/RouteMotif.astro';
+import { site } from '../config/site.ts';
+import { homeFaqs } from '../content/faqs.ts';
+import { img } from '../content/images.ts';
+import { homeOrder, lineBySlug } from '../content/lines.ts';
+import { teamIntro } from '../content/team.ts';
+import { faqSchema, orgId, webPageSchema } from '../lib/seo.ts';
+
+const base = Astro.site!;
+const title = 'Pathfinder/LL&D Insurance Group | Find your path.';
+const description =
+  'Insurance guides since 1913. Pathfinder/LL&D in Houston, Texas guides businesses and families to field-tested coverage. Find your path.';
+const lines = homeOrder.map(lineBySlug);
+
+const help = [
+  { icon: 'credit-card', title: 'Make a Payment', text: 'Pay online, by check draft, by phone or by mail.', href: '/make-a-payment/' },
+  { icon: 'users', title: 'Careers', text: 'Apply to join the Pathfinder/LL&D team.', href: '/careers/' },
+  { icon: 'file-text', title: 'Get a Quote', text: 'Start a home, auto or professional liability quote online.', href: '/get-a-quote/' },
+];
+
+const jsonLd = [
+  webPageSchema(base, { path: '/', title, description }),
+  faqSchema(homeFaqs),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Insurance coverage from Pathfinder/LL&D',
+    itemListElement: lines.map((l, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: { '@type': 'Service', name: l.heading, url: new URL(l.path, base).toString(), provider: { '@id': orgId(base) } },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} rawTitle description={description} jsonLd={jsonLd} announcement={site.incidentNotice}>
+  <section class="surface-dark">
+    <div class="bg-grid absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="glow-orb -top-56 -left-48 -z-10 h-[36rem] w-[36rem] opacity-80" aria-hidden="true"></div>
+    <div class="glow-orb -right-40 bottom-0 -z-10 h-[26rem] w-[26rem] opacity-40" aria-hidden="true"></div>
+    <RouteMotif class="absolute inset-0 -z-10 h-full w-full opacity-70" />
+
+    <div class="container-page grid items-center gap-12 pt-12 pb-16 sm:pt-16 sm:pb-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pt-24 lg:pb-28">
+      <div>
+        <p class="eyebrow eyebrow-light hero-in" style="--d:0">{site.name} · Since {site.foundingYear}</p>
+        <h1 class="mt-5 text-[2.6rem] leading-[1.04] sm:text-6xl lg:text-[4.25rem]">
+          We’re insurance guides.
+          <span class="from-glow block bg-gradient-to-r via-sky-300 to-white bg-clip-text text-transparent">Find your path.</span>
+        </h1>
+        <p class="hero-in mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8" style="--d:1">
+          Since 1913, our team of seasoned brokers and service representatives has been guiding clients through the best and worst of times with field-tested insurance solutions.
+        </p>
+        <div class="hero-in mt-8 flex flex-wrap gap-3" style="--d:2">
+          <a href="/businesses/" class="btn btn-light">
+            Businesses
+            <Icon name="arrow-right" size={16} class="arrow" />
+          </a>
+          <a href="/home-and-auto/" class="btn btn-ghost">
+            Home + Auto
+            <Icon name="arrow-right" size={16} class="arrow" />
+          </a>
+        </div>
+        <div class="hero-in mt-10 border-t border-white/10 pt-6" style="--d:3">
+          <h2 class="text-xs font-bold tracking-[0.18em] text-slate-400 uppercase">How else can we help?</h2>
+          <div class="mt-3 flex flex-wrap gap-x-6 gap-y-1">
+            <a href="/make-a-payment/" class="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white">
+              <Icon name="credit-card" size={16} class="text-glow" />
+              <span class="underline decoration-white/30 underline-offset-4 group-hover:decoration-white">Make a Payment</span>
+            </a>
+            <a href="/careers/" class="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white">
+              <Icon name="users" size={16} class="text-glow" />
+              <span class="underline decoration-white/30 underline-offset-4 group-hover:decoration-white">Careers</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div class="from-glow/40 to-brand-600/0 absolute -inset-4 -z-10 rounded-[2.25rem] bg-gradient-to-br blur-2xl" aria-hidden="true"></div>
+        <div class="relative overflow-hidden rounded-[1.75rem] border border-white/15 shadow-2xl" data-hero-media="/media/hero.mp4">
+          <Picture
+            src={img('generated/hero-video-poster')}
+            alt="Pipes, valves and a processing tower at an energy facility under a blue sky"
+            formats={['avif', 'webp']}
+            widths={[360, 480, 640, 800, 1120]}
+            sizes="(min-width: 1024px) 560px, calc(100vw - 2.5rem)"
+            loading="eager"
+            fetchpriority="high"
+            quality={55}
+            class="aspect-[4/3] w-full object-cover sm:aspect-[16/10] lg:aspect-[4/3]"
+          />
+          <div class="from-brand-950/80 pointer-events-none absolute inset-0 bg-gradient-to-t via-transparent to-transparent" aria-hidden="true"></div>
+          <button
+            type="button"
+            hidden
+            data-hero-toggle
+            aria-pressed="false"
+            class="absolute top-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/35 text-white backdrop-blur-md hover:bg-black/55"
+            aria-label="Pause background video"
+          >
+            <span data-icon-pause><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+            <span data-icon-play hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
+          </button>
+          <div class="absolute inset-x-4 bottom-4 flex flex-wrap items-end justify-between gap-3">
+            <div class="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-md">
+              <p class="text-[0.65rem] font-bold tracking-[0.18em] text-sky-200 uppercase">Guiding clients since</p>
+              <p class="text-3xl leading-none font-bold text-white tabular-nums">{site.foundingYear}</p>
+            </div>
+            <a href={`tel:${site.phone.tel}`} class="flex min-h-11 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md hover:bg-white/20">
+              <span class="bg-glow animate-pulse-dot inline-block h-2 w-2 rounded-full" aria-hidden="true"></span>
+              {site.phone.display}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-16 sm:py-20 lg:py-28" aria-labelledby="coverage-heading">
+    <div class="bg-dots absolute inset-x-0 top-0 -z-10 h-72" aria-hidden="true"></div>
+    <div class="container-page">
+      <div class="max-w-2xl" data-reveal>
+        <p class="eyebrow">What we cover</p>
+        <h2 id="coverage-heading" class="mt-4 text-3xl sm:text-4xl lg:text-5xl">Field-tested insurance solutions</h2>
+        <p class="mt-4 text-lg text-slate-600">We guide businesses and we guide people. Choose a path to see how we can help.</p>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {lines.map((line, i) => <LineCard line={line} index={i} sizes="(min-width: 1280px) 300px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-mist py-16 sm:py-20 lg:py-28" aria-labelledby="about-heading">
+    <div class="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="relative" data-reveal="left">
+        <Picture
+          src={img('generated/path-road')}
+          alt="Winding road through green hills at sunrise"
+          formats={['avif', 'webp']}
+          widths={[400, 640, 800, 1100]}
+          sizes="(min-width: 1024px) 600px, 100vw"
+          quality={58}
+          loading="lazy"
+          class="aspect-[4/3] w-full rounded-[1.75rem] object-cover shadow-card"
+        />
+        <div class="shadow-lift absolute -right-3 -bottom-6 max-w-[15rem] rounded-2xl border border-slate-200 bg-white p-5 sm:right-6">
+          <p class="text-brand-700 text-4xl leading-none font-bold tabular-nums">{new Date().getFullYear() - site.foundingYear}+</p>
+          <p class="mt-2 text-sm font-medium text-slate-600">years guiding clients, since {site.foundingYear}</p>
+        </div>
+      </div>
+      <div data-reveal="right">
+        <p class="eyebrow">Who we are</p>
+        <h2 id="about-heading" class="mt-4 text-3xl sm:text-4xl lg:text-5xl">Texas roots. Clients across the country.</h2>
+        <p class="mt-5 text-lg leading-8 text-slate-600">{teamIntro}</p>
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+          <li class="flex items-start gap-3">
+            <span class="bg-brand-50 text-brand-700 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"><Icon name="compass" size={20} /></span>
+            <span class="text-sm leading-6 text-slate-700"><strong class="text-ink block">Seasoned guides</strong>Brokers and service representatives who know your industry.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="bg-brand-50 text-brand-700 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"><Icon name="shield" size={20} /></span>
+            <span class="text-sm leading-6 text-slate-700"><strong class="text-ink block">Field-tested solutions</strong>Coverage that has held up through the best and worst of times.</span>
+          </li>
+        </ul>
+        <a href="/our-team/" class="btn btn-primary mt-9">
+          Meet our team
+          <Icon name="arrow-right" size={16} class="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 lg:py-24" aria-labelledby="help-heading">
+    <div class="container-page">
+      <div class="max-w-2xl" data-reveal>
+        <p class="eyebrow">Resources</p>
+        <h2 id="help-heading" class="mt-4 text-3xl sm:text-4xl">How else can we help?</h2>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        {
+          help.map((h, i) => (
+            <a href={h.href} class="group card hover:shadow-lift hover:border-brand-200 flex items-start gap-4 p-6 transition duration-500 hover:-translate-y-1" data-reveal style={`--reveal-i:${i}`}>
+              <span class="bg-brand-700 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white"><Icon name={h.icon} size={22} /></span>
+              <span class="flex-1">
+                <span class="text-ink flex items-center justify-between gap-2 text-lg font-bold">
+                  {h.title}
+                  <Icon name="arrow-up-right" size={18} class="text-brand-600 transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+                <span class="mt-1 block text-sm leading-6 text-slate-600">{h.text}</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Faq faqs={homeFaqs} heading="Questions, answered" />
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-in {
+      animation: var(--animate-fade-up);
+      animation-delay: calc(var(--d) * 90ms + 80ms);
+    }
+  }
+  :global([data-hero-media] video) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  :global([data-hero-media] video.is-ready) {
+    opacity: 1;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const box = document.querySelector('[data-hero-media]');
+    if (!box) return;
+    const conn = navigator.connection;
+    if (!matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)').matches) return;
+    if (conn && (conn.saveData || /2g/.test(conn.effectiveType || ''))) return;
+    const start = () => {
+      const video = document.createElement('video');
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      video.setAttribute('aria-hidden', 'true');
+      video.tabIndex = -1;
+      video.src = box.dataset.heroMedia;
+      const toggle = box.querySelector('[data-hero-toggle]');
+      video.addEventListener(
+        'canplay',
+        () => {
+          video.classList.add('is-ready');
+          video.play().then(() => (toggle.hidden = false)).catch(() => {});
+        },
+        { once: true },
+      );
+      toggle.addEventListener('click', () => {
+        const paused = !video.paused;
+        if (paused) video.pause();
+        else video.play();
+        toggle.setAttribute('aria-pressed', String(paused));
+        toggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video');
+        toggle.querySelector('[data-icon-pause]').hidden = paused;
+        toggle.querySelector('[data-icon-play]').hidden = !paused;
+      });
+      box.querySelector('picture, img').after(video);
+    };
+    const later = () => setTimeout(start, 1200);
+    if (document.readyState === 'complete') later();
+    else addEventListener('load', later, { once: true });
+  })();
+</script>

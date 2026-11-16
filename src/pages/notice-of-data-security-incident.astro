@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import notice from '../content/incident-notice.html?raw';
+import { webPageSchema, type Crumb } from '../lib/seo.ts';
+
+// The notice text is reproduced verbatim from the published notice. Edit
+// src/content/incident-notice.html only with approved wording.
+const base = Astro.site!;
+const path = '/notice-of-data-security-incident/';
+const title = 'Notice of Data Security Incident';
+const heading = 'Pathfinder LL&D Insurance Group Notifies Individuals of Data Security Incident';
+const description =
+  'Pathfinder LL&D Insurance Group notice of a data security incident, with the dedicated response line and steps to help protect personal information.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: title, path },
+];
+const jsonLd = [
+  {
+    ...webPageSchema(base, { path, title: heading, description }),
+    datePublished: '2026-07-29',
+  },
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={jsonLd} ogType="article">
+  <PageHero eyebrow="Notice of data security incident" title={heading} crumbs={crumbs} compact />
+
+  <section class="py-12 sm:py-16 lg:py-20">
+    <div class="container-page">
+      <div class="mx-auto max-w-3xl">
+        <div class="mb-8 flex justify-end print:hidden">
+          <button type="button" class="btn btn-outline min-h-11 px-5 py-2" data-print><Icon name="file-text" size={16} /> Print this notice</button>
+        </div>
+        <article class="prose-legal notice" set:html={notice} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>
+
+<style is:global>
+  .notice .notice-posted {
+    margin-top: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .notice .notice-callout {
+    margin: 1.5rem 0 2.5rem;
+    border-radius: 1.25rem;
+    border: 1px solid #b9d6fb;
+    border-left: 5px solid #0051a0;
+    background: #eff6ff;
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+  .notice .notice-callout h2 {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #06417d;
+  }
+  .notice .notice-callout p {
+    margin: 0.35rem 0;
+  }
+  .notice .notice-tel {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+    color: #06417d;
+  }
+  .notice .notice-hours {
+    font-size: 0.9rem;
+    color: #475569;
+  }
+  .notice hr {
+    margin: 2.5rem 0;
+    border-color: #e2e8f0;
+  }
+  .notice h2 {
+    scroll-margin-top: 7rem;
+  }
+  .notice h3 .notice-num {
+    margin-right: 0.35rem;
+    color: #0051a0;
+  }
+  .notice ul.notice-bureaus {
+    display: grid;
+    list-style: none;
+    gap: 1rem;
+    padding: 0;
+  }
+  @media (min-width: 640px) {
+    .notice ul.notice-bureaus {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .notice ul.notice-bureaus li {
+    margin: 0;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    background: #f3f7fc;
+    padding: 1rem 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .notice .notice-name {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    color: #0a1628;
+  }
+  .notice address {
+    font-style: normal;
+  }
+  .notice .notice-phone {
+    font-weight: 600;
+    color: #0a1628;
+    font-variant-numeric: tabular-nums;
+  }
+  .notice ul.notice-plain {
+    list-style: disc;
+  }
+  .notice ol.notice-steps {
+    margin: 1rem 0;
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+  .notice ol.notice-steps li {
+    margin: 0.5rem 0;
+  }
+  .notice dl.notice-states {
+    margin: 1.5rem 0;
+  }
+  .notice dl.notice-states dt {
+    margin-top: 1.25rem;
+    font-weight: 700;
+    color: #0a1628;
+  }
+  .notice dl.notice-states dd {
+    margin: 0.25rem 0 0;
+  }
+  .notice .notice-nm-heading {
+    font-weight: 700;
+    color: #0a1628;
+  }
+  @media print {
+    header,
+    footer,
+    nav,
+    .surface-dark .bg-grid,
+    .glow-orb {
+      display: none !important;
+    }
+    .surface-dark {
+      background: none !important;
+    }
+    .surface-dark h1 {
+      color: #000 !important;
+      font-size: 18pt !important;
+    }
+    .notice {
+      font-size: 10.5pt;
+      line-height: 1.45;
+      color: #000;
+    }
+    .notice a {
+      color: #000;
+      text-decoration: none;
+    }
+    .notice ul.notice-bureaus li,
+    .notice dl.notice-states dd {
+      break-inside: avoid;
+    }
+  }
+</style>

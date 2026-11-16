@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import { site } from '../../config/site.ts';
+import { paymentFaqs } from '../../content/faqs.ts';
+import { img } from '../../content/images.ts';
+import { faqSchema, webPageSchema, type Crumb } from '../../lib/seo.ts';
+
+const base = Astro.site!;
+const path = '/make-a-payment/';
+const title = 'Make a Payment';
+const description =
+  'Pay your Pathfinder/LL&D insurance premium online by credit card or ACH through our secure ePay portal, by check draft authorization, by phone or by mail.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Resources', path: '/resources/' },
+  { name: title, path },
+];
+const phones = [{ display: '281-556-9999', tel: site.phone.tel }, ...site.otherPhones];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description }), faqSchema(paymentFaqs)]}>
+  <PageHero
+    eyebrow="Resources"
+    title="Make a Payment"
+    lead="Four ways to pay: online, by check draft, by phone or by mail. Choose whichever is most convenient."
+    crumbs={crumbs}
+    image={img('lines/make-a-payment')}
+    imageAlt="Person holding a payment card while typing on a laptop"
+  >
+    <a href={site.epayUrl} class="btn btn-light" rel="noopener">Pay online with ePay <Icon name="external" size={16} /></a>
+    <a href="/make-a-payment/check-draft/" class="btn btn-ghost">Check draft form <Icon name="arrow-right" size={16} class="arrow" /></a>
+  </PageHero>
+
+  <section class="relative py-16 sm:py-20 lg:py-28" aria-labelledby="methods-heading">
+    <div class="bg-dots absolute inset-x-0 top-0 -z-10 h-72" aria-hidden="true"></div>
+    <div class="container-page">
+      <h2 id="methods-heading" class="sr-only">Payment methods</h2>
+      <div class="grid gap-6 md:grid-cols-2">
+        <article id="online" class="card hover:shadow-lift scroll-mt-28 p-7 transition duration-500 sm:p-9" data-reveal>
+          <span class="from-brand-700 to-brand-500 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white"><Icon name="credit-card" size={26} /></span>
+          <h3 class="mt-6 text-2xl">Credit Card / Online ACH</h3>
+          <p class="mt-3 leading-7">Pay online with a credit card using our secure ePay portal.</p>
+          <a href={site.epayUrl} class="btn btn-primary mt-6" rel="noopener">Click here to access ePay <Icon name="external" size={16} /></a>
+          <p class="mt-4 flex items-center gap-2 text-xs text-slate-500"><Icon name="lock" size={14} /> Opens pathfinderlld.epaypolicy.com</p>
+        </article>
+
+        <article id="check-draft" class="card hover:shadow-lift scroll-mt-28 p-7 transition duration-500 sm:p-9" data-reveal style="--reveal-i:1">
+          <span class="from-brand-700 to-brand-500 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white"><Icon name="pen" size={26} /></span>
+          <h3 class="mt-6 text-2xl">Check Draft</h3>
+          <p class="mt-3 leading-7">
+            Paying using a check draft authorization is quicker and more convenient than having to mail us a check. Please complete this secure form. The form will ask you to attach an image/scan of
+            your check — please be sure to sign the check before uploading.
+          </p>
+          <a href="/make-a-payment/check-draft/" class="btn btn-primary mt-6">Complete the secure form <Icon name="arrow-right" size={16} class="arrow" /></a>
+        </article>
+
+        <article id="phone" class="card hover:shadow-lift scroll-mt-28 p-7 transition duration-500 sm:p-9" data-reveal>
+          <span class="from-brand-700 to-brand-500 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white"><Icon name="phone" size={26} /></span>
+          <h3 class="mt-6 text-2xl">Phone</h3>
+          <p class="mt-3 leading-7">Contact your Account Manager by phone to discuss payment options. You can also call any of these numbers for assistance:</p>
+          <ul class="mt-5 grid grid-cols-2 gap-3">
+            {
+              phones.map((p) => (
+                <li>
+                  <a href={`tel:${p.tel}`} class="text-brand-800 hover:border-brand-400 hover:bg-brand-50 flex min-h-12 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm font-bold tabular-nums transition">
+                    {p.display}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </article>
+
+        <article id="mail" class="card hover:shadow-lift scroll-mt-28 p-7 transition duration-500 sm:p-9" data-reveal style="--reveal-i:1">
+          <span class="from-brand-700 to-brand-500 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white"><Icon name="mail" size={26} /></span>
+          <h3 class="mt-6 text-2xl">Mail</h3>
+          <p class="mt-3 leading-7">Mail your check or money order to the following address:</p>
+          <address class="bg-mist text-ink mt-5 rounded-xl border border-slate-200 px-5 py-4 text-[0.95rem] leading-7 font-semibold not-italic">
+            {site.paymentsMail.name}<br />
+            {site.paymentsMail.line1}<br />
+            {site.paymentsMail.line2}
+          </address>
+          <p class="mt-4 text-sm leading-6">Please include your name and policy number.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <Faq faqs={paymentFaqs} heading="Payment questions" />
+</BaseLayout>

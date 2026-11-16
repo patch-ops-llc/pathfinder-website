@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import { quoteFaqs } from '../content/faqs.ts';
+import { lines } from '../content/lines.ts';
+import { requireForm } from '../forms/registry.ts';
+import { faqSchema, webPageSchema, type Crumb } from '../lib/seo.ts';
+
+const base = Astro.site!;
+const path = '/get-a-quote/';
+const title = 'Get an Insurance Quote';
+const description =
+  'Start a home, auto or lawyers’ professional liability insurance quote online with Pathfinder/LL&D, or tell us about your business and our team will follow up.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Get a Quote', path },
+];
+const quotes = [
+  { icon: 'home', title: 'Home Quote', text: 'Homeowners insurance. Tell us about you, your home and your current coverage.', href: '/home-insurance-quote/', form: 'home-quote' },
+  { icon: 'car', title: 'Auto Quote', text: 'Auto insurance. Add your drivers, vehicles and the coverage you want.', href: '/auto-quote/', form: 'auto-quote' },
+  { icon: 'scale', title: 'Professional Liability Quote', text: 'The Lawyers’ Professional Liability application for law firms.', href: '/professional-liability-quote/', form: 'professional-liability-quote' },
+].map((q) => ({ ...q, meta: `${requireForm(q.form).steps.length} steps` }));
+const talk = lines.filter((l) => l.slug !== 'home-and-auto');
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={[webPageSchema(base, { path, title, description }), faqSchema(quoteFaqs)]}>
+  <PageHero eyebrow="Start here" title="Get a quote" lead="Start a quote online in a few minutes, or tell us about your business and one of our guides will follow up." crumbs={crumbs} compact />
+
+  <section class="relative py-16 sm:py-20 lg:py-24" aria-labelledby="online-heading">
+    <div class="bg-dots absolute inset-x-0 top-0 -z-10 h-72" aria-hidden="true"></div>
+    <div class="container-page">
+      <div class="max-w-2xl" data-reveal>
+        <p class="eyebrow">Online quotes</p>
+        <h2 id="online-heading" class="mt-4 text-3xl sm:text-4xl">Start a quote online</h2>
+      </div>
+      <ul class="mt-10 grid gap-6 md:grid-cols-3">
+        {
+          quotes.map((q, i) => (
+            <li class="group card hover:border-brand-200 hover:shadow-lift relative flex flex-col p-7 transition duration-500 hover:-translate-y-1" data-reveal style={`--reveal-i:${i}`}>
+              <div class="flex items-center justify-between">
+                <span class="from-brand-700 to-brand-500 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-white"><Icon name={q.icon} size={26} /></span>
+                <span class="bg-brand-50 text-brand-800 rounded-full px-3 py-1 text-xs font-bold">{q.meta}</span>
+              </div>
+              <h3 class="mt-6 text-xl">
+                <a href={q.href} class="after:absolute after:inset-0">{q.title}</a>
+              </h3>
+              <p class="mt-3 flex-1 text-[0.95rem] leading-6">{q.text}</p>
+              <span class="text-brand-700 mt-6 inline-flex items-center gap-2 text-sm font-semibold">Start <Icon name="arrow-right" size={16} class="arrow" /></span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="pb-16 sm:pb-20 lg:pb-24" aria-labelledby="talk-heading">
+    <div class="container-page">
+      <div class="max-w-2xl" data-reveal>
+        <p class="eyebrow">Let’s talk</p>
+        <h2 id="talk-heading" class="mt-4 text-3xl sm:text-4xl">Every other line of coverage</h2>
+        <p class="mt-4 text-lg">Choose your industry and complete the short “Let’s Talk” form. A member of our team will follow up.</p>
+      </div>
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          talk.map((l) => (
+            <li>
+              <a href={`${l.path}#lets-talk`} class="group card hover:border-brand-300 hover:shadow-lift flex min-h-16 items-center gap-4 px-5 py-4 transition duration-300">
+                <span class="bg-brand-50 text-brand-700 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"><Icon name={l.icon} size={20} /></span>
+                <span class="text-ink flex-1 font-semibold">{l.heading}</span>
+                <Icon name="arrow-right" size={16} class="arrow text-brand-600" />
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href="/contact/" class="group card hover:border-brand-300 hover:shadow-lift flex min-h-16 items-center gap-4 px-5 py-4 transition duration-300">
+            <span class="bg-brand-50 text-brand-700 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"><Icon name="mail" size={20} /></span>
+            <span class="text-ink flex-1 font-semibold">Something else</span>
+            <Icon name="arrow-right" size={16} class="arrow text-brand-600" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <Faq faqs={quoteFaqs} heading="Quote questions" />
+</BaseLayout>

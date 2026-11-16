@@ -1,0 +1,20 @@
+---
+import FormPage from '../../components/FormPage.astro';
+---
+
+<FormPage
+  path="/make-a-payment/check-draft/"
+  formId="check-draft"
+  title="Check Draft Authorization"
+  description="Authorize a one-time check draft payment to Pathfinder/LL&D Insurance Group. Complete the secure form and attach an image or scan of your signed check."
+  eyebrow="Make a Payment"
+  heading="Check Draft Authorization"
+  lead="Paying using a check draft authorization is quicker and more convenient than having to mail us a check. Please be sure to sign the check before uploading."
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Make a Payment', path: '/make-a-payment/' },
+    { name: 'Check Draft Authorization', path: '/make-a-payment/check-draft/' },
+  ]}
+  checklist={['Your policy number', 'Your check number and payment amount', 'A clear photo or scan of your signed check (image or PDF, up to 10 MB)']}
+  privacy="Your authorization and check image are sent to the Pathfinder/LL&D accounting team over an encrypted connection. They are not stored on this website."
+/>

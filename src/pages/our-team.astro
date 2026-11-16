@@ -1,0 +1,94 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import { img } from '../content/images.ts';
+import { team, teamIntro } from '../content/team.ts';
+import { personSchema, webPageSchema, type Crumb } from '../lib/seo.ts';
+
+const base = Astro.site!;
+const path = '/our-team/';
+const title = 'Our Team';
+const description =
+  'Meet the Pathfinder/LL&D team: seasoned brokers and service representatives guiding clients with field-tested insurance solutions since 1913.';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: title, path },
+];
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((p) => p[0])
+    .join('');
+const jsonLd = [
+  webPageSchema(base, { path, title, description, type: 'AboutPage' }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Pathfinder/LL&D Insurance Group team',
+    itemListElement: team.map((m, i) => ({ '@type': 'ListItem', position: i + 1, item: personSchema(base, m) })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={crumbs} jsonLd={jsonLd}>
+  <PageHero eyebrow="Who we are" title="Our team" lead={teamIntro} crumbs={crumbs} compact />
+
+  <section class="relative py-16 sm:py-20 lg:py-28" aria-labelledby="team-heading">
+    <div class="bg-dots absolute inset-x-0 top-0 -z-10 h-72" aria-hidden="true"></div>
+    <div class="container-page">
+      <h2 id="team-heading" class="sr-only">Team members</h2>
+      <ul class="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+        {
+          team.map((m, i) => (
+            <li class="group card hover:shadow-lift relative flex flex-col overflow-hidden transition duration-500 hover:-translate-y-1" data-reveal style={`--reveal-i:${i % 4}`}>
+              <div class="bg-brand-950 relative aspect-[4/5] overflow-hidden">
+                {m.photo ? (
+                  <Picture
+                    src={img(`team/${m.photo}`)}
+                    alt={`Portrait of ${m.name}`}
+                    formats={['avif', 'webp']}
+                    widths={[200, 320, 480, 640]}
+                    sizes="(min-width: 1024px) 290px, (min-width: 768px) 33vw, 50vw"
+                    quality={60}
+                    loading={i < 4 ? 'eager' : 'lazy'}
+                    class="h-full w-full object-cover object-top transition duration-700 ease-out group-hover:scale-105"
+                  />
+                ) : (
+                  <div class="bg-grid flex h-full w-full items-center justify-center" role="img" aria-label={`${m.name} (no portrait available)`}>
+                    <span class="border-glow/40 text-glow flex h-24 w-24 items-center justify-center rounded-full border text-3xl font-bold sm:h-28 sm:w-28">{initials(m.name)}</span>
+                  </div>
+                )}
+                <div class="from-brand-950/60 pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t to-transparent" aria-hidden="true" />
+              </div>
+              <div class="flex flex-1 items-start justify-between gap-2 p-4 sm:p-5">
+                <div>
+                  <h3 class="text-base leading-snug sm:text-lg">
+                    {m.name}
+                    {m.credentials && <span class="text-brand-700 font-semibold">, {m.credentials}</span>}
+                  </h3>
+                  <p class="mt-1 text-xs leading-5 font-medium text-slate-500 sm:text-sm">{m.title}</p>
+                </div>
+                {m.linkedin && (
+                  <a
+                    href={m.linkedin}
+                    target="_blank"
+                    rel="noopener"
+                    class="text-brand-700 hover:bg-brand-700 -mt-1 -mr-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition hover:text-white"
+                    aria-label={`${m.name} on LinkedIn`}
+                  >
+                    <Icon name="linkedin" size={18} />
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand heading="Talk with our team." text="Tell us what you need and one of our guides will follow up." />
+</BaseLayout>

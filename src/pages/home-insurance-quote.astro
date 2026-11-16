@@ -1,0 +1,26 @@
+---
+import FormPage from '../components/FormPage.astro';
+import { img } from '../content/images.ts';
+---
+
+<FormPage
+  path="/home-insurance-quote/"
+  formId="home-quote"
+  title="Home Insurance Quote"
+  description="Start a homeowners insurance quote online with Pathfinder/LL&D. Tell us about you, your home and your current coverage, and our team will get in touch."
+  eyebrow="Home and Auto"
+  heading="Home Quote"
+  lead="Tell us about you, your home and your current coverage. Once you’ve verified your information and submitted the form, we’ll get in touch as soon as possible."
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Home and Auto', path: '/home-and-auto/' },
+    { name: 'Home Quote', path: '/home-insurance-quote/' },
+  ]}
+  image={img('lines/home-and-auto')}
+  imageAlt="Two-storey stone and shingle home with a landscaped front garden"
+  checklist={[
+    'Your current policy, if you have one (provider and expiration date)',
+    'Details about your home: year built, square footage, roof age',
+    'The dwelling and liability coverage you would like',
+  ]}
+/>

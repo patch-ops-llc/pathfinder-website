@@ -1,0 +1,29 @@
+---
+import FormRenderer from './forms/FormRenderer.tsx';
+import { site } from '../config/site.ts';
+import { requireForm } from '../forms/registry.ts';
+
+interface Props {
+  formId: string;
+  /** Hydrate immediately (dedicated form pages) or when scrolled near (page-bottom forms). */
+  eager?: boolean;
+  class?: string;
+}
+const { formId, eager = false, class: className } = Astro.props;
+const form = requireForm(formId);
+---
+
+<div class:list={['card p-5 sm:p-8 lg:p-10', className]}>
+  {
+    eager ? (
+      <FormRenderer client:load form={form} phone={site.phone.display} phoneHref={`tel:${site.phone.tel}`} />
+    ) : (
+      <FormRenderer client:visible={{ rootMargin: '600px' }} form={form} phone={site.phone.display} phoneHref={`tel:${site.phone.tel}`} />
+    )
+  }
+  <noscript>
+    <p class="mt-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+      This form needs JavaScript to send. Please enable JavaScript, or call us at <a href={`tel:${site.phone.tel}`} class="font-semibold underline">{site.phone.display}</a>.
+    </p>
+  </noscript>
+</div>
